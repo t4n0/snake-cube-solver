@@ -27,8 +27,6 @@ bool operator!=(const Quaternion& lhs, const Quaternion& rhs) noexcept
 // ij = -ji = k
 // ki = -ik = j
 // jk = -kj = i
-//
-// (a + bi + cj + dk) * (e + fi + gj + hk)
 Quaternion operator*(const Quaternion& lhs, const Quaternion& rhs)
 {
     return {lhs.w * rhs.w - lhs.i * rhs.i - lhs.j * rhs.j - lhs.k * rhs.k,
