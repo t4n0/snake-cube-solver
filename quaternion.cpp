@@ -39,11 +39,6 @@ bool operator!=(const Quaternion& lhs, const Quaternion& rhs) noexcept
     return !(lhs == rhs);
 }
 
-// Basic rules of quaternion multiplication:
-// i^2 = j^2 = k^2 = -1
-// ij = -ji = k
-// ki = -ik = j
-// jk = -kj = i
 Quaternion operator*(const Quaternion& lhs, const Quaternion& rhs)
 {
     return {lhs.w_ * rhs.w_ - lhs.i_ * rhs.i_ - lhs.j_ * rhs.j_ - lhs.k_ * rhs.k_,

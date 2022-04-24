@@ -59,6 +59,11 @@ TEST_P(MultiplicationOperatorTest, GivenSample_ExpectCorrectResult)
     ASSERT_THAT(GetLhs() * GetRhs(), GetExpectedResult());
 }
 
+// Basic rules of quaternion multiplication:
+// i^2 = j^2 = k^2 = -1
+// ij = -ji = k
+// ki = -ik = j
+// jk = -kj = i
 INSTANTIATE_TEST_SUITE_P(
     ,
     MultiplicationOperatorTest,
