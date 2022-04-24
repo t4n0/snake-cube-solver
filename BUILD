@@ -15,3 +15,9 @@ cc_test(
         "@googletest//:gtest_main",
     ],
 )
+
+cc_binary(
+    name = "cube",
+    srcs = ["main.cpp"],
+    deps = [":quaternion"],
+)
