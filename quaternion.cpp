@@ -3,18 +3,22 @@
 namespace math
 {
 
+Quaternion::Quaternion(const double w, const double i, const double j, const double k) : w_{w}, i_{i}, j_{j}, k_{k} {}
+
+Quaternion::Quaternion(const double i, const double j, const double k) : w_{0.0}, i_{i}, j_{j}, k_{k} {}
+
 std::ostream& operator<<(std::ostream& stream, const Quaternion& value)
 {
-    stream << "w: " << value.w << ", i: " << value.i << ", j: " << value.j << ", k: " << value.k;
+    stream << "w: " << value.w_ << ", i: " << value.i_ << ", j: " << value.j_ << ", k: " << value.k_;
     return stream;
 }
 
 bool operator==(const Quaternion& lhs, const Quaternion& rhs) noexcept
 {
-    return (lhs.w == rhs.w) &&  //
-           (lhs.i == rhs.i) &&  //
-           (lhs.j == rhs.j) &&  //
-           (lhs.k == rhs.k);
+    return (lhs.w_ == rhs.w_) &&  //
+           (lhs.i_ == rhs.i_) &&  //
+           (lhs.j_ == rhs.j_) &&  //
+           (lhs.k_ == rhs.k_);
 }
 
 bool operator!=(const Quaternion& lhs, const Quaternion& rhs) noexcept
@@ -29,10 +33,10 @@ bool operator!=(const Quaternion& lhs, const Quaternion& rhs) noexcept
 // jk = -kj = i
 Quaternion operator*(const Quaternion& lhs, const Quaternion& rhs)
 {
-    return {lhs.w * rhs.w - lhs.i * rhs.i - lhs.j * rhs.j - lhs.k * rhs.k,
-            lhs.w * rhs.i + lhs.i * rhs.w + lhs.j * rhs.k - lhs.k * rhs.j,
-            lhs.w * rhs.j + lhs.j * rhs.w + lhs.k * rhs.i - lhs.i * rhs.k,
-            lhs.w * rhs.k + lhs.k * rhs.w + lhs.i * rhs.j - lhs.j * rhs.i};
+    return {lhs.w_ * rhs.w_ - lhs.i_ * rhs.i_ - lhs.j_ * rhs.j_ - lhs.k_ * rhs.k_,
+            lhs.w_ * rhs.i_ + lhs.i_ * rhs.w_ + lhs.j_ * rhs.k_ - lhs.k_ * rhs.j_,
+            lhs.w_ * rhs.j_ + lhs.j_ * rhs.w_ + lhs.k_ * rhs.i_ - lhs.i_ * rhs.k_,
+            lhs.w_ * rhs.k_ + lhs.k_ * rhs.w_ + lhs.i_ * rhs.j_ - lhs.j_ * rhs.i_};
 }
 
 }  // namespace math

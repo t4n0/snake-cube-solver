@@ -11,6 +11,13 @@ namespace math
 namespace
 {
 
+TEST(ConstructorsTest, GivenSample_ExpectCorrectInstance)
+{
+    const Quaternion sample{2.0, 3.0, 4.0};
+    const Quaternion expected{0.0, 2.0, 3.0, 4.0};
+    ASSERT_THAT(sample, expected);
+}
+
 TEST(StreamOperatorTest, GivenSample_ExpectCorrectString)
 {
     const Quaternion sample{1.1, 2.0, 3, 4};

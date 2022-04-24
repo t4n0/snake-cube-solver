@@ -6,12 +6,22 @@
 namespace math
 {
 
-struct Quaternion
+class Quaternion
 {
-    double w;
-    double i;
-    double j;
-    double k;
+  public:
+    Quaternion(const double w, const double i, const double j, const double k);
+    Quaternion(const double i, const double j, const double k);
+
+  private:
+    double w_;
+    double i_;
+    double j_;
+    double k_;
+
+    friend std::ostream& operator<<(std::ostream& stream, const Quaternion& value);
+    friend bool operator==(const Quaternion& lhs, const Quaternion& rhs) noexcept;
+    friend bool operator!=(const Quaternion& lhs, const Quaternion& rhs) noexcept;
+    friend Quaternion operator*(const Quaternion& lhs, const Quaternion& rhs);
 };
 
 std::ostream& operator<<(std::ostream& stream, const Quaternion& value);
