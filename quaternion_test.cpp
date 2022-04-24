@@ -86,5 +86,16 @@ TEST(InverseTest, GivenMultiplicationWithInverse_ExpectIdentity)
     ASSERT_THAT(sample * sample.Inverse(), identity);
 }
 
+TEST(RotateByTest, DISABLED_GivenSample_ExpectCorrectRotation)
+{
+    const Quaternion rotation = CreateRotation(TAU / 2, 1.0, 0.0, 0.0);
+    const Quaternion vector_in{0.0, 0.0, 1.0, 0.0};
+
+    const Quaternion vector_out = vector_in.RotateBy(rotation);
+
+    const Quaternion expected{0.0, 0.0, -1.0, 0.0};
+    ASSERT_THAT(vector_out, expected);
+}
+
 }  // namespace
 }  // namespace math

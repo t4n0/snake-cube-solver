@@ -1,7 +1,10 @@
 #ifndef QUATERNION_H
 #define QUATERNION_H
 
+#include <numbers>
 #include <ostream>
+
+static constexpr double TAU = std::numbers::pi * 2.0;
 
 namespace math
 {
@@ -13,6 +16,7 @@ class Quaternion
     Quaternion(const double i, const double j, const double k);
 
     Quaternion Inverse() const;
+    Quaternion RotateBy(const Quaternion rotation) const;
 
   private:
     double w_;
@@ -30,6 +34,8 @@ std::ostream& operator<<(std::ostream& stream, const Quaternion& value);
 bool operator==(const Quaternion& lhs, const Quaternion& rhs) noexcept;
 bool operator!=(const Quaternion& lhs, const Quaternion& rhs) noexcept;
 Quaternion operator*(const Quaternion& lhs, const Quaternion& rhs);
+
+Quaternion CreateRotation(const double angle, const double x, const double y, const double z);
 
 }  // namespace math
 

@@ -1,5 +1,7 @@
 #include "quaternion.h"
 
+#include <cmath>
+
 namespace math
 {
 
@@ -11,6 +13,11 @@ Quaternion Quaternion::Inverse() const
 {
     const double normalization = w_ * w_ + i_ * i_ + j_ * j_ + k_ * k_;
     return {w_ / normalization, -i_ / normalization, -j_ / normalization, -k_ / normalization};
+}
+
+Quaternion Quaternion::RotateBy(const Quaternion rotation) const
+{
+    return rotation * (*this) * rotation.Inverse();
 }
 
 std::ostream& operator<<(std::ostream& stream, const Quaternion& value)
@@ -43,6 +50,15 @@ Quaternion operator*(const Quaternion& lhs, const Quaternion& rhs)
             lhs.w_ * rhs.i_ + lhs.i_ * rhs.w_ + lhs.j_ * rhs.k_ - lhs.k_ * rhs.j_,
             lhs.w_ * rhs.j_ + lhs.j_ * rhs.w_ + lhs.k_ * rhs.i_ - lhs.i_ * rhs.k_,
             lhs.w_ * rhs.k_ + lhs.k_ * rhs.w_ + lhs.i_ * rhs.j_ - lhs.j_ * rhs.i_};
+}
+
+Quaternion CreateRotation(const double angle, const double x, const double y, const double z)
+{
+    const double half_angle = angle / 2.0;
+    const double scalar_factor = std::cos(half_angle);
+    const double normalization = std::sqrt(x * x + y * y + z * z);
+    const double vector_factor = std::sin(half_angle) / normalization;
+    return {scalar_factor, x * vector_factor, y * vector_factor, z * vector_factor};
 }
 
 }  // namespace math
