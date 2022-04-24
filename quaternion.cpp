@@ -7,6 +7,12 @@ Quaternion::Quaternion(const double w, const double i, const double j, const dou
 
 Quaternion::Quaternion(const double i, const double j, const double k) : w_{0.0}, i_{i}, j_{j}, k_{k} {}
 
+Quaternion Quaternion::Inverse() const
+{
+    const double normalization = w_ * w_ + i_ * i_ + j_ * j_ + k_ * k_;
+    return {w_ / normalization, -i_ / normalization, -j_ / normalization, -k_ / normalization};
+}
+
 std::ostream& operator<<(std::ostream& stream, const Quaternion& value)
 {
     stream << "w: " << value.w_ << ", i: " << value.i_ << ", j: " << value.j_ << ", k: " << value.k_;

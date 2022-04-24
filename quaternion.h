@@ -12,6 +12,8 @@ class Quaternion
     Quaternion(const double w, const double i, const double j, const double k);
     Quaternion(const double i, const double j, const double k);
 
+    Quaternion Inverse() const;
+
   private:
     double w_;
     double i_;

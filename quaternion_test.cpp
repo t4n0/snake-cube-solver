@@ -79,5 +79,12 @@ INSTANTIATE_TEST_SUITE_P(
                     std::make_tuple(Quaternion{0, 0, 0, 1}, Quaternion{0, 0, 1, 0}, Quaternion{0, -1, 0, 0}),
                     std::make_tuple(Quaternion{0, 0, 0, 1}, Quaternion{0, 0, 0, 1}, Quaternion{-1, 0, 0, 0})));
 
+TEST(InverseTest, GivenMultiplicationWithInverse_ExpectIdentity)
+{
+    const Quaternion sample{1.1, 2.2, 3.3, 4.4};
+    const Quaternion identity{1.0, 0.0, 0.0, 0.0};
+    ASSERT_THAT(sample * sample.Inverse(), identity);
+}
+
 }  // namespace
 }  // namespace math
