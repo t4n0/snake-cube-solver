@@ -13,7 +13,7 @@ class Quaternion
 {
   public:
     Quaternion(const double w, const double i, const double j, const double k);
-    Quaternion(const double i, const double j, const double k);
+    Quaternion(const double x, const double y, const double z);
 
     Quaternion Inverse() const;
     Quaternion RotateBy(const Quaternion& rotation) const;

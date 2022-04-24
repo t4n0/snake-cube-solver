@@ -7,7 +7,7 @@ namespace math
 
 Quaternion::Quaternion(const double w, const double i, const double j, const double k) : w_{w}, i_{i}, j_{j}, k_{k} {}
 
-Quaternion::Quaternion(const double i, const double j, const double k) : w_{0.0}, i_{i}, j_{j}, k_{k} {}
+Quaternion::Quaternion(const double x, const double y, const double z) : w_{0.0}, i_{x}, j_{y}, k_{z} {}
 
 Quaternion Quaternion::Inverse() const
 {
