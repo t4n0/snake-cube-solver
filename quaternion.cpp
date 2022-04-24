@@ -15,7 +15,7 @@ Quaternion Quaternion::Inverse() const
     return {w_ / normalization, -i_ / normalization, -j_ / normalization, -k_ / normalization};
 }
 
-Quaternion Quaternion::RotateBy(const Quaternion rotation) const
+Quaternion Quaternion::RotateBy(const Quaternion& rotation) const
 {
     return rotation * (*this) * rotation.Inverse();
 }

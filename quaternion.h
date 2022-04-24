@@ -16,7 +16,7 @@ class Quaternion
     Quaternion(const double i, const double j, const double k);
 
     Quaternion Inverse() const;
-    Quaternion RotateBy(const Quaternion rotation) const;
+    Quaternion RotateBy(const Quaternion& rotation) const;
 
   private:
     double w_;
