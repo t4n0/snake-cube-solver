@@ -1,7 +1,6 @@
 #include "quaternion.h"
 
 #include <gmock/gmock.h>
-#include <gtest/gtest.h>
 
 #include <sstream>
 #include <tuple>
@@ -10,6 +9,22 @@ namespace math
 {
 namespace
 {
+
+bool IsCloseTo(const double candidate, const double target)
+{
+    constexpr double generous_epsilon{1e-6};
+    const bool is_above_upper = candidate > target + generous_epsilon;
+    const bool is_below_lower = candidate < target - generous_epsilon;
+    return !is_above_upper && !is_below_lower;
+}
+
+MATCHER_P(IsCloseTo, target, "")
+{
+    return IsCloseTo(arg.w_, target.w_) &&  //
+           IsCloseTo(arg.i_, target.i_) &&  //
+           IsCloseTo(arg.j_, target.j_) &&  //
+           IsCloseTo(arg.k_, target.k_);
+}
 
 TEST(ConstructorsTest, GivenSample_ExpectCorrectInstance)
 {
@@ -56,7 +71,7 @@ struct MultiplicationOperatorTest : public testing::TestWithParam<std::tuple<Qua
 
 TEST_P(MultiplicationOperatorTest, GivenSample_ExpectCorrectResult)
 {
-    ASSERT_THAT(GetLhs() * GetRhs(), GetExpectedResult());
+    ASSERT_THAT(GetLhs() * GetRhs(), IsCloseTo(GetExpectedResult()));
 }
 
 // Basic rules of quaternion multiplication:
@@ -91,7 +106,7 @@ TEST(InverseTest, GivenMultiplicationWithInverse_ExpectIdentity)
     ASSERT_THAT(sample * sample.Inverse(), identity);
 }
 
-TEST(RotateByTest, DISABLED_GivenSample_ExpectCorrectRotation)
+TEST(RotateByTest, GivenSample_ExpectCorrectRotation)
 {
     const Quaternion rotation = CreateRotation(TAU / 2, 1.0, 0.0, 0.0);
     const Quaternion vector_in{0.0, 0.0, 1.0, 0.0};
@@ -99,7 +114,7 @@ TEST(RotateByTest, DISABLED_GivenSample_ExpectCorrectRotation)
     const Quaternion vector_out = vector_in.RotateBy(rotation);
 
     const Quaternion expected{0.0, 0.0, -1.0, 0.0};
-    ASSERT_THAT(vector_out, expected);
+    ASSERT_THAT(vector_out, IsCloseTo(expected));
 }
 
 }  // namespace
