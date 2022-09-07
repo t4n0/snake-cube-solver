@@ -6,12 +6,6 @@ git_repository(
     tag = "release-1.11.0",
 )
 
-git_repository(
-    name = "googlebenchmark",
-    remote = "https://github.com/google/benchmark",
-    tag = "v1.5.2",
-)
-
 BUILD_SCIPLOT = """
 cc_library(
     name = "sciplot",
