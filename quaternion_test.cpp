@@ -32,6 +32,24 @@ TEST(ConstructorsTest, GivenSample_ExpectCorrectInstance)
     ASSERT_THAT(sample, expected);
 }
 
+TEST(AdditionOperatorTest, GivenSample_ExpectCorrectResult)
+{
+    const Quaternion a{0.1, 0.2, 0.3, 0.4};
+    const Quaternion b{1.0, 2.0, 3.0, 4.0};
+    const Quaternion expected{1.1, 2.2, 3.3, 4.4};
+
+    ASSERT_THAT(a + b, expected);
+}
+
+TEST(SubtractionOperatorTest, GivenSample_ExpectCorrectResult)
+{
+    const Quaternion a{0.1, 0.2, 0.3, 0.4};
+    const Quaternion b{1.0, 2.0, 3.0, 4.0};
+    const Quaternion expected{-0.9, -1.8, -2.7, -3.6};
+
+    ASSERT_THAT(a - b, expected);
+}
+
 TEST(StreamOperatorTest, GivenSample_ExpectCorrectString)
 {
     const Quaternion sample{1.1, 2.0, 3, 4};

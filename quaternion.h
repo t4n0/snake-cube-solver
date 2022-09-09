@@ -21,6 +21,9 @@ class Quaternion
     double GetScalarPart() const;
     std::array<double, 3> GetVectorPart() const;
 
+    Quaternion& operator+=(const Quaternion& rhs) noexcept;
+    Quaternion& operator-=(const Quaternion& rhs) noexcept;
+
   private:
     double w_;
     double i_;
@@ -37,6 +40,8 @@ std::ostream& operator<<(std::ostream& stream, const Quaternion& value);
 bool operator==(const Quaternion& lhs, const Quaternion& rhs) noexcept;
 bool operator!=(const Quaternion& lhs, const Quaternion& rhs) noexcept;
 Quaternion operator*(const Quaternion& lhs, const Quaternion& rhs);
+Quaternion operator+(Quaternion lhs, const Quaternion& rhs) noexcept;
+Quaternion operator-(Quaternion lhs, const Quaternion& rhs) noexcept;
 
 Quaternion CreateRotation(const double angle, const double x, const double y, const double z);
 

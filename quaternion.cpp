@@ -30,6 +30,24 @@ std::array<double, 3> Quaternion::GetVectorPart() const
     return {i_, j_, k_};
 }
 
+Quaternion& Quaternion::operator+=(const Quaternion& rhs) noexcept
+{
+    w_ += rhs.w_;
+    i_ += rhs.i_;
+    j_ += rhs.j_;
+    k_ += rhs.k_;
+    return *this;
+}
+
+Quaternion& Quaternion::operator-=(const Quaternion& rhs) noexcept
+{
+    w_ -= rhs.w_;
+    i_ -= rhs.i_;
+    j_ -= rhs.j_;
+    k_ -= rhs.k_;
+    return *this;
+}
+
 std::ostream& operator<<(std::ostream& stream, const Quaternion& value)
 {
     stream << "w: " << value.w_ << ", i: " << value.i_ << ", j: " << value.j_ << ", k: " << value.k_;
@@ -55,6 +73,18 @@ Quaternion operator*(const Quaternion& lhs, const Quaternion& rhs)
             lhs.w_ * rhs.i_ + lhs.i_ * rhs.w_ + lhs.j_ * rhs.k_ - lhs.k_ * rhs.j_,
             lhs.w_ * rhs.j_ + lhs.j_ * rhs.w_ + lhs.k_ * rhs.i_ - lhs.i_ * rhs.k_,
             lhs.w_ * rhs.k_ + lhs.k_ * rhs.w_ + lhs.i_ * rhs.j_ - lhs.j_ * rhs.i_};
+}
+
+Quaternion operator+(Quaternion lhs, const Quaternion& rhs) noexcept
+{
+    lhs += rhs;
+    return lhs;
+}
+
+Quaternion operator-(Quaternion lhs, const Quaternion& rhs) noexcept
+{
+    lhs -= rhs;
+    return lhs;
 }
 
 Quaternion CreateRotation(const double angle, const double x, const double y, const double z)
