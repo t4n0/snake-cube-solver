@@ -1,5 +1,7 @@
 #include "quaternion.h"
 
+#include "math_constants.h"
+
 #include <gmock/gmock.h>
 
 #include <sstream>

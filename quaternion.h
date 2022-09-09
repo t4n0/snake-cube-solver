@@ -2,10 +2,7 @@
 #define QUATERNION_H
 
 #include <array>
-#include <numbers>
 #include <ostream>
-
-static constexpr double TAU = std::numbers::pi * 2.0;
 
 namespace math
 {
