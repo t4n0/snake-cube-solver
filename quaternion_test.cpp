@@ -10,16 +10,15 @@ namespace math
 namespace
 {
 
-bool IsCloseTo(const double candidate, const double target)
-{
-    constexpr double generous_epsilon{1e-6};
-    const bool is_above_upper = candidate > target + generous_epsilon;
-    const bool is_below_lower = candidate < target - generous_epsilon;
-    return !is_above_upper && !is_below_lower;
-}
-
 MATCHER_P(IsCloseTo, target, "")
 {
+    const auto IsCloseTo = [](const double candidate, const double target) {
+        constexpr double generous_epsilon{1e-6};
+        const bool is_above_upper = candidate > target + generous_epsilon;
+        const bool is_below_lower = candidate < target - generous_epsilon;
+        return !is_above_upper && !is_below_lower;
+    };
+
     return IsCloseTo(arg.GetScalarPart(), target.GetScalarPart()) &&              //
            IsCloseTo(arg.GetVectorPart().at(0), target.GetVectorPart().at(0)) &&  //
            IsCloseTo(arg.GetVectorPart().at(1), target.GetVectorPart().at(1)) &&  //
