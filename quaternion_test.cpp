@@ -106,6 +106,13 @@ TEST(InverseTest, GivenMultiplicationWithInverse_ExpectIdentity)
     ASSERT_THAT(sample * sample.Inverse(), identity);
 }
 
+TEST(InverseTest, GivenInverse_ExpectCounterRotation)
+{
+    const Quaternion rotation = CreateRotation(TAU / 2.0, 1.0, 0.0, 0.0);
+    const Quaternion counter_rotation = CreateRotation(-TAU / 2.0, 1.0, 0.0, 0.0);
+    ASSERT_THAT(rotation.Inverse(), counter_rotation);
+}
+
 TEST(RotateByTest, GivenSample_ExpectCorrectRotation)
 {
     const Quaternion rotation = CreateRotation(TAU / 2, 1.0, 0.0, 0.0);
