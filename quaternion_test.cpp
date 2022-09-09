@@ -20,10 +20,10 @@ bool IsCloseTo(const double candidate, const double target)
 
 MATCHER_P(IsCloseTo, target, "")
 {
-    return IsCloseTo(arg.w_, target.w_) &&  //
-           IsCloseTo(arg.i_, target.i_) &&  //
-           IsCloseTo(arg.j_, target.j_) &&  //
-           IsCloseTo(arg.k_, target.k_);
+    return IsCloseTo(arg.GetScalarPart(), target.GetScalarPart()) &&              //
+           IsCloseTo(arg.GetVectorPart().at(0), target.GetVectorPart().at(0)) &&  //
+           IsCloseTo(arg.GetVectorPart().at(1), target.GetVectorPart().at(1)) &&  //
+           IsCloseTo(arg.GetVectorPart().at(2), target.GetVectorPart().at(2));
 }
 
 TEST(ConstructorsTest, GivenSample_ExpectCorrectInstance)

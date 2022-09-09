@@ -20,6 +20,16 @@ Quaternion Quaternion::RotateBy(const Quaternion& rotation) const
     return rotation * (*this) * rotation.Inverse();
 }
 
+double Quaternion::GetScalarPart() const
+{
+    return w_;
+}
+
+std::array<double, 3> Quaternion::GetVectorPart() const
+{
+    return {i_, j_, k_};
+}
+
 std::ostream& operator<<(std::ostream& stream, const Quaternion& value)
 {
     stream << "w: " << value.w_ << ", i: " << value.i_ << ", j: " << value.j_ << ", k: " << value.k_;

@@ -1,6 +1,7 @@
 #ifndef QUATERNION_H
 #define QUATERNION_H
 
+#include <array>
 #include <numbers>
 #include <ostream>
 
@@ -17,6 +18,8 @@ class Quaternion
 
     Quaternion Inverse() const;
     Quaternion RotateBy(const Quaternion& rotation) const;
+    double GetScalarPart() const;
+    std::array<double, 3> GetVectorPart() const;
 
   private:
     double w_;
