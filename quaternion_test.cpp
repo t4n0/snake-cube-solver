@@ -143,5 +143,36 @@ TEST(RotateByTest, GivenSample_ExpectCorrectRotation)
     ASSERT_THAT(vector_out, IsCloseTo(expected));
 }
 
+TEST(RotationTest, GivenConsecutiveRotation_ExpectCorrectRotation)
+{
+    const Quaternion first = CreateRotation(TAU / 4.0, 1.0, 0.0, 0.0);
+    const Quaternion second = CreateRotation(TAU / 4.0, 0.0, 0.0, 1.0);
+    const Quaternion arbitrary_location_before{0.0, 1.0, 1.0, 0.0};
+    const Quaternion expected_location_after{0.0, 0.0, 1.0, 1.0};
+    ASSERT_THAT(arbitrary_location_before.RotateBy(first).RotateBy(second), expected_location_after);
+}
+
+TEST(RotationTest, GivenDifferentOrderOfRotations_ExpectDifferentEndpoints)
+{
+    const Quaternion first = CreateRotation(TAU / 4.0, 1.0, 0.0, 0.0);
+    const Quaternion second = CreateRotation(TAU / 4.0, 0.0, 0.0, 1.0);
+    const Quaternion arbitrary_location_before{0.0, 1.0, 1.0, 0.0};
+    ASSERT_THAT(arbitrary_location_before.RotateBy(first).RotateBy(second),
+                testing::Ne(arbitrary_location_before.RotateBy(second).RotateBy(first)));
+
+    const Quaternion expected_location_after{0.0, -1.0, 0.0, 1.0};
+    ASSERT_THAT(arbitrary_location_before.RotateBy(second).RotateBy(first), IsCloseTo(expected_location_after));
+}
+
+TEST(RotationTest, GivenRotatedRotation_ExpectCorrectRotation)
+{
+    const Quaternion first = CreateRotation(TAU / 4.0, 0.0, 0.0, 1.0);
+    const Quaternion second = CreateRotation(TAU / 4.0, 1.0, 0.0, 0.0);
+    const Quaternion arbitrary_location_before{0.0, 1.0, 1.0, 0.0};
+    const Quaternion expected_location_after{0.0, 0.0, 1.0, 1.0};
+    ASSERT_THAT(arbitrary_location_before.RotateBy(first).RotateBy(second.RotateBy(first)),
+                IsCloseTo(expected_location_after));
+}
+
 }  // namespace
 }  // namespace math
