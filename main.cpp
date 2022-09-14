@@ -1,7 +1,7 @@
 #include "math_constants.h"
 #include "quaternion.h"
 
-#include <sciplot/sciplot.hpp>
+#include <matplot/matplot.h>
 
 #include <array>
 #include <iostream>
@@ -9,28 +9,18 @@
 
 const math::Quaternion kOrigin{0.0, 0.0, 0.0};
 const math::Quaternion kNullOrientation{1.0, 0.0, 0.0, 0.0};
-
-math::Quaternion BackTransform(const math::Quaternion& origin_global,
-                               const math::Quaternion& orientation_global,
-                               const math::Quaternion& point_local)
-{
-    return origin_global + point_local.RotateBy(orientation_global.Inverse());
-}
+const math::Quaternion kQuarterPitch = math::CreateRotation(math::TAU / 4.0, 0.0, 1.0, 0.0);
 
 struct Beam
 {
-    math::Quaternion location{kOrigin};
-    math::Quaternion orientation{kNullOrientation};
-    double length{0.0};
-
-    math::Quaternion GetEndOfBeamInLocalCoor() const noexcept { return math::Quaternion{length, 0.0, 0.0}; }
+    math::Quaternion orientation{kNullOrientation};  // Relative to parent system.
+    math::Quaternion tip{kOrigin};                   // Local coordinates.
 };
 
 std::ostream& operator<<(std::ostream& ostream, const Beam& beam)
 {
-    ostream << "location: " << beam.location << '\n';
     ostream << "orientation: " << beam.orientation << '\n';
-    ostream << "length: " << beam.length;
+    ostream << "tip: " << beam.tip;
     return ostream;
 }
 
@@ -40,17 +30,19 @@ std::vector<Beam> CreateFlatCube()
         3.0, 3.0, 3.0, 3.0, 2.0, 2.0, 2.0, 3.0, 3.0, 2.0, 2.0, 3.0, 2.0, 3.0, 2.0, 2.0, 3.0};
 
     std::vector<Beam> cube{};
-    auto next_location = math::Quaternion{kOrigin};
-    auto next_orientation = math::Quaternion{kNullOrientation};
-    double rotation_angle_sign = 1.0;
-    for (const auto beam_length : kBeamLengths)
+    cube.emplace_back(Beam{kNullOrientation, math::Quaternion{kBeamLengths.front(), 0.0, 0.0}});
+
+    auto next_orientation = math::Quaternion{kQuarterPitch};
+    for (std::size_t idx{1}; idx < kBeamLengths.size(); idx++)
     {
-        cube.emplace_back(Beam{next_location, next_orientation, beam_length});
-        const auto& latest = cube.back();
-        next_location = BackTransform(latest.location, latest.orientation, latest.GetEndOfBeamInLocalCoor());
-        next_orientation =
-            next_orientation * math::CreateRotation(rotation_angle_sign * math::TAU / 4.0, 0.0, 1.0, 0.0);
-        rotation_angle_sign *= -1.0;
+        next_orientation = next_orientation.Inverse();
+        cube.emplace_back(Beam{next_orientation, math::Quaternion{kBeamLengths.at(idx), 0.0, 0.0}});
+    }
+
+    std::cout << "Created flat cube with these beam orientations:\n";
+    for (const auto& beam : cube)
+    {
+        std::cout << beam.orientation << '\n';
     }
 
     return cube;
@@ -63,45 +55,24 @@ int main()
 
     std::vector<Beam> cube = CreateFlatCube();
 
-    std::vector<double> x{};
-    std::vector<double> y{};
-    std::vector<double> z{};
+    std::vector<double> x{0.0};
+    std::vector<double> y{0.0};
+    std::vector<double> z{0.0};
 
+    math::Quaternion current_location{0.0, 0.0, 0.0};        // In global coordinates.
+    math::Quaternion current_orientation{kNullOrientation};  // In global coordinates.
     for (const auto& beam : cube)
     {
-        const auto beginning = beam.location.GetVectorPart();
-        x.push_back(beginning.at(0));
-        y.push_back(beginning.at(1));
-        z.push_back(beginning.at(2));
+        current_orientation = beam.orientation * current_orientation;
+        current_location += beam.tip.RotateBy(current_orientation);
+        const auto current_coordinates = current_location.GetVectorPart();
+        x.push_back(current_coordinates.at(0));
+        y.push_back(current_coordinates.at(1));
+        z.push_back(current_coordinates.at(2));
     }
 
-    const auto final_beam_end =
-        BackTransform(cube.back().location, cube.back().orientation, cube.back().GetEndOfBeamInLocalCoor());
-    const auto end = final_beam_end.GetVectorPart();
-    x.push_back(end.at(0));
-    y.push_back(end.at(1));
-    z.push_back(end.at(2));
-
-    // Plotting
-
-    sciplot::Plot3D plot{};
-
-    plot.xlabel("x");
-    plot.ylabel("y");
-    plot.zlabel("z");
-
-    plot.border().clear();
-    plot.border().bottomLeftFront();
-    plot.border().bottomRightFront();
-    plot.border().leftVertical();
-
-    plot.palette("dark2");
-
-    plot.drawCurve(x, y, z).label("cube").lineColor("red");
-
-    sciplot::Figure fig{{plot}};
-    sciplot::Canvas canvas{{fig}};
-    canvas.show();
+    matplot::show();
+    matplot::plot3(x, y, z);
 
     return 0;
 }

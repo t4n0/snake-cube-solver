@@ -29,6 +29,6 @@ cc_binary(
     deps = [
         ":math_constants",
         ":quaternion",
-        "@sciplot",
+        "@matplot",
     ],
 )
