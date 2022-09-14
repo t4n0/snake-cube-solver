@@ -6,18 +6,44 @@ git_repository(
     tag = "release-1.11.0",
 )
 
-BUILD_SCIPLOT = """
+BUILD_MATPLOT = """
 cc_library(
-    name = "sciplot",
-    hdrs = glob(["sciplot/**/*.hpp"]),
-    includes = ["."],
+    name = "cimg",
+    hdrs = ["source/3rd_party/cimg/CImg.h"],
+    strip_include_prefix = "source/3rd_party/cimg",
+)
+
+cc_library(
+    name = "nodesoup",
+    srcs = glob([
+        "source/3rd_party/nodesoup/**/*.cpp",
+        "source/3rd_party/nodesoup/**/*.hpp",
+    ]),
+    hdrs = ["source/3rd_party/nodesoup/include/nodesoup.hpp"],
+    strip_include_prefix = "source/3rd_party/nodesoup/include/",
+)
+
+cc_library(
+    name = "matplot",
+    srcs = glob(
+        include = ["source/matplot/**/*.cpp"],
+        exclude = ["**/*opengl*"],
+    ),
+    hdrs = glob(
+        include = ["source/matplot/**/*.h"],
+        exclude = ["**/*opengl*"],
+    ),
+    strip_include_prefix = "source",
     visibility = ["//visibility:public"],
+    deps = [
+        ":cimg",
+        ":nodesoup",
+    ],
 )"""
 
 new_git_repository(
-    name = "sciplot",
-    build_file_content = BUILD_SCIPLOT,
-    commit = "69fd01ed491c9de271f70982433012aa53a0d271",
-    remote = "https://github.com/sciplot/sciplot",
-    shallow_since = "1661173888 +0200",
+    name = "matplot",
+    branch = "master",
+    build_file_content = BUILD_MATPLOT,
+    remote = "https://github.com/alandefreitas/matplotplusplus",
 )
