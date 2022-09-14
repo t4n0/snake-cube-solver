@@ -4,7 +4,9 @@
 #include <matplot/matplot.h>
 
 #include <array>
+#include <chrono>
 #include <iostream>
+#include <thread>
 #include <vector>
 
 const math::Quaternion kOrigin{0.0, 0.0, 0.0};
@@ -80,8 +82,25 @@ void Plot(const std::vector<Beam>& cube)
     const auto& y = std::get<1>(vertices);
     const auto& z = std::get<2>(vertices);
     matplot::plot3(x, y, z);
-    LogCube(cube);
-    std::cin.ignore();
+    matplot::axis(matplot::equal);
+    matplot::xlabel("x");
+    matplot::ylabel("y");
+    matplot::zlabel("z");
+}
+
+void PerformQuarterRotations(std::vector<Beam>& cube, const std::size_t index)
+{
+    if (index >= (cube.size() - 1UL))
+    {
+        Plot(cube);
+        return;
+    }
+
+    for (std::size_t quarter_rotations{0}; quarter_rotations < 4; quarter_rotations++)
+    {
+        PerformQuarterRotations(cube, index + 1);
+        cube.at(index).orientation = kQuarterRoll.PrependAsLocalRotationAfter(cube.at(index).orientation);
+    }
 }
 
 int main()
@@ -93,9 +112,7 @@ int main()
 
     matplot::show();
 
-    Plot(cube);
-    cube.at(3).orientation = kQuarterRoll.Inverse().PrependAsLocalRotationAfter(cube.at(3).orientation);
-    Plot(cube);
+    PerformQuarterRotations(cube, 1);
 
     return 0;
 }
