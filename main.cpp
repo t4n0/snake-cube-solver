@@ -54,9 +54,7 @@ std::vector<Beam> CreateFlatCube()
 std::tuple<std::vector<double>, std::vector<double>, std::vector<double>> GenerateVertices(
     const std::vector<Beam>& cube)
 {
-    std::vector<double> x{0.0};
-    std::vector<double> y{0.0};
-    std::vector<double> z{0.0};
+    std::tuple<std::vector<double>, std::vector<double>, std::vector<double>> x_y_z{};
 
     math::Quaternion current_location{0.0, 0.0, 0.0};        // In global coordinates.
     math::Quaternion current_orientation{kNullOrientation};  // In global coordinates.
@@ -68,13 +66,13 @@ std::tuple<std::vector<double>, std::vector<double>, std::vector<double>> Genera
         {
             current_location += single_block;
             const auto current_coordinates = current_location.GetVectorPart();
-            x.push_back(current_coordinates.at(0));
-            y.push_back(current_coordinates.at(1));
-            z.push_back(current_coordinates.at(2));
+            std::get<0>(x_y_z).push_back(current_coordinates.at(0));
+            std::get<1>(x_y_z).push_back(current_coordinates.at(1));
+            std::get<2>(x_y_z).push_back(current_coordinates.at(2));
         }
     }
 
-    return {x, y, z};
+    return x_y_z;
 }
 
 void Plot(const std::vector<Beam>& cube)
