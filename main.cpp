@@ -9,8 +9,8 @@
 #include <thread>
 
 const math::Quaternion kNullOrientation{1.0, 0.0, 0.0, 0.0};
-const math::Quaternion kQuarterPitch = math::CreateRotation(math::TAU / 4.0, 0.0, 1.0, 0.0);
-const math::Quaternion kQuarterRoll = math::CreateRotation(math::TAU / 4.0, 1.0, 0.0, 0.0);
+const math::Quaternion kQuarterPitch{math::CreateRotation(math::TAU / 4.0, 0.0, 1.0, 0.0)};
+const math::Quaternion kQuarterRoll{math::CreateRotation(math::TAU / 4.0, 1.0, 0.0, 0.0)};
 
 struct Beam
 {
