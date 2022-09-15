@@ -3,6 +3,7 @@
 
 #include <matplot/matplot.h>
 
+#include <algorithm>
 #include <array>
 #include <chrono>
 #include <iostream>
@@ -52,9 +53,11 @@ Cube CreateFlatCube()
     return cube;
 }
 
-std::tuple<std::array<double, 27>, std::array<double, 27>, std::array<double, 27>> GenerateVertices(const Cube& cube)
+using Vertices = std::tuple<std::array<double, 27>, std::array<double, 27>, std::array<double, 27>>;
+
+Vertices GenerateVertices(const Cube& cube)
 {
-    std::tuple<std::array<double, 27>, std::array<double, 27>, std::array<double, 27>> x_y_z{};
+    Vertices x_y_z{};
 
     math::Quaternion current_location{0.0, 0.0, 0.0};        // In global coordinates.
     math::Quaternion current_orientation{kNullOrientation};  // In global coordinates.
@@ -63,7 +66,7 @@ std::tuple<std::array<double, 27>, std::array<double, 27>, std::array<double, 27
     {
         current_orientation = beam.orientation.AppendAsLocalRotationAfter(current_orientation);
         const auto single_block = math::Quaternion{1.0, 0.0, 0.0}.RotateBy(current_orientation);
-        for (int blocks{0}; blocks < beam.blocks; blocks++)
+        for (int blocks{1}; blocks < beam.blocks; blocks++)
         {
             current_location += single_block;
             const auto current_coordinates = current_location.GetVectorPart();
@@ -92,11 +95,29 @@ void Plot(const Cube& cube)
 
 const int kTotalPossibleRotations{1073741824};  // = 4^15
 
+bool VerticesFitIn3by3Box(const Vertices& vertices)
+{
+    const auto& x = std::get<0>(vertices);
+    const auto& y = std::get<1>(vertices);
+    const auto& z = std::get<2>(vertices);
+    const auto x_minmax = std::minmax_element(x.begin(), x.end());
+    const auto y_minmax = std::minmax_element(y.begin(), y.end());
+    const auto z_minmax = std::minmax_element(z.begin(), z.end());
+    const auto x_diff = (*x_minmax.second) - (*x_minmax.first);
+    const auto y_diff = (*x_minmax.second) - (*y_minmax.first);
+    const auto z_diff = (*z_minmax.second) - (*z_minmax.first);
+    return (x_diff < 3.01) && (y_diff < 3.01) && (z_diff < 3.01);
+}
+
 void PerformQuarterRotations(Cube& cube, const std::size_t index)
 {
     if (index >= (cube.size() - 1UL))
     {
-        // Plot(cube);
+        const auto vertices = GenerateVertices(cube);
+        if (VerticesFitIn3by3Box(vertices))
+        {
+            // Plot(cube);
+        }
         return;
     }
 
