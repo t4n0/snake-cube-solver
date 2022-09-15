@@ -108,13 +108,18 @@ void PerformQuarterRotations(std::vector<Beam>& cube, const std::size_t index)
 int main()
 {
     std::cout << "Solving cube puzzle with brute force.\n";
+    std::cout.imbue(std::locale(""));
     std::cout << "Attempting to calculate up to " << kTotalPossibleRotations << " solutions.\n";
 
     std::vector<Beam> cube = CreateFlatCube();
 
     matplot::show();
 
+    const auto t0 = std::chrono::steady_clock::now();
     PerformQuarterRotations(cube, 1);
+    const auto t1 = std::chrono::steady_clock::now();
+
+    std::cout << "Time spent: " << std::chrono::duration_cast<std::chrono::seconds>(t1 - t0).count() << "secs\n";
 
     return 0;
 }
