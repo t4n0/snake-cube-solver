@@ -15,7 +15,7 @@ class Quaternion
 
     Quaternion Inverse() const;
     Quaternion RotateBy(const Quaternion& rotation) const;
-    Quaternion PrependAsLocalRotationAfter(const Quaternion& preceding_rotation) const;
+    Quaternion AppendAsLocalRotationAfter(const Quaternion& preceding_rotation) const;
     double GetScalarPart() const;
     std::array<double, 3> GetVectorPart() const;
 

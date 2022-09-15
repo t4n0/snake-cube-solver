@@ -20,7 +20,7 @@ Quaternion Quaternion::RotateBy(const Quaternion& rotation) const
     return rotation * (*this) * rotation.Inverse();
 }
 
-Quaternion Quaternion::PrependAsLocalRotationAfter(const Quaternion& preceding_rotation) const
+Quaternion Quaternion::AppendAsLocalRotationAfter(const Quaternion& preceding_rotation) const
 {
     const auto global_rotation = (*this).RotateBy(preceding_rotation);
     return global_rotation * preceding_rotation;

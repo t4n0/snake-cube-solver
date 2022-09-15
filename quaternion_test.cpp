@@ -164,13 +164,13 @@ TEST(RotationTest, GivenDifferentOrderOfRotations_ExpectDifferentEndpoints)
     ASSERT_THAT(arbitrary_location_before.RotateBy(second).RotateBy(first), IsCloseTo(expected_location_after));
 }
 
-TEST(PrependAsLocalRotationAfterTest, GivenPrecedingRotation_ExpectCorrectRotation)
+TEST(AppendAsLocalRotationAfterTest, GivenPrecedingRotation_ExpectCorrectRotation)
 {
     const Quaternion preceding = CreateRotation(TAU / 4.0, 0.0, 0.0, 1.0);
     const Quaternion next_local_rotation = CreateRotation(TAU / 4.0, 1.0, 0.0, 0.0);
     const Quaternion arbitrary_location_before{0.0, 1.0, 1.0, 0.0};
     const Quaternion expected_location_after{0.0, 0.0, 1.0, 1.0};
-    ASSERT_THAT(arbitrary_location_before.RotateBy(next_local_rotation.PrependAsLocalRotationAfter(preceding)),
+    ASSERT_THAT(arbitrary_location_before.RotateBy(next_local_rotation.AppendAsLocalRotationAfter(preceding)),
                 IsCloseTo(expected_location_after));
 }
 

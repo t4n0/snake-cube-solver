@@ -61,7 +61,7 @@ std::tuple<std::array<double, 27>, std::array<double, 27>, std::array<double, 27
     std::size_t index{0};
     for (const auto& beam : cube)
     {
-        current_orientation = beam.orientation.PrependAsLocalRotationAfter(current_orientation);
+        current_orientation = beam.orientation.AppendAsLocalRotationAfter(current_orientation);
         const auto single_block = math::Quaternion{1.0, 0.0, 0.0}.RotateBy(current_orientation);
         for (int blocks{0}; blocks < beam.blocks; blocks++)
         {
@@ -103,7 +103,7 @@ void PerformQuarterRotations(Cube& cube, const std::size_t index)
     for (std::size_t quarter_rotations{0}; quarter_rotations < 4; quarter_rotations++)
     {
         PerformQuarterRotations(cube, index + 1);
-        cube.at(index).orientation = kQuarterRoll.PrependAsLocalRotationAfter(cube.at(index).orientation);
+        cube.at(index).orientation = kQuarterRoll.AppendAsLocalRotationAfter(cube.at(index).orientation);
     }
 }
 
