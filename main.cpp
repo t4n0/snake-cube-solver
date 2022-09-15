@@ -7,7 +7,6 @@
 #include <chrono>
 #include <iostream>
 #include <thread>
-#include <vector>
 
 const math::Quaternion kNullOrientation{1.0, 0.0, 0.0, 0.0};
 const math::Quaternion kQuarterPitch = math::CreateRotation(math::TAU / 4.0, 0.0, 1.0, 0.0);
@@ -26,7 +25,9 @@ std::ostream& operator<<(std::ostream& ostream, const Beam& beam)
     return ostream;
 }
 
-void LogCube(const std::vector<Beam> cube)
+using Cube = std::array<Beam, 17>;
+
+void LogCube(const Cube& cube)
 {
     for (const auto& beam : cube)
     {
@@ -34,30 +35,30 @@ void LogCube(const std::vector<Beam> cube)
     }
 }
 
-std::vector<Beam> CreateFlatCube()
+Cube CreateFlatCube()
 {
     constexpr std::array<int, 17> kBeamLengths{3, 3, 3, 3, 2, 2, 2, 3, 3, 2, 2, 3, 2, 3, 2, 2, 3};
 
-    std::vector<Beam> cube{};
-    cube.emplace_back(Beam{kNullOrientation, kBeamLengths.front()});
+    Cube cube{};
+    cube.at(0) = Beam{kNullOrientation, kBeamLengths.front()};
 
     auto next_orientation = math::Quaternion{kQuarterPitch};
     for (std::size_t idx{1}; idx < kBeamLengths.size(); idx++)
     {
         next_orientation = next_orientation.Inverse();
-        cube.emplace_back(Beam{next_orientation, kBeamLengths.at(idx)});
+        cube.at(idx) = Beam{next_orientation, kBeamLengths.at(idx)};
     }
 
     return cube;
 }
 
-std::tuple<std::vector<double>, std::vector<double>, std::vector<double>> GenerateVertices(
-    const std::vector<Beam>& cube)
+std::tuple<std::array<double, 27>, std::array<double, 27>, std::array<double, 27>> GenerateVertices(const Cube& cube)
 {
-    std::tuple<std::vector<double>, std::vector<double>, std::vector<double>> x_y_z{};
+    std::tuple<std::array<double, 27>, std::array<double, 27>, std::array<double, 27>> x_y_z{};
 
     math::Quaternion current_location{0.0, 0.0, 0.0};        // In global coordinates.
     math::Quaternion current_orientation{kNullOrientation};  // In global coordinates.
+    std::size_t index{0};
     for (const auto& beam : cube)
     {
         current_orientation = beam.orientation.PrependAsLocalRotationAfter(current_orientation);
@@ -66,16 +67,17 @@ std::tuple<std::vector<double>, std::vector<double>, std::vector<double>> Genera
         {
             current_location += single_block;
             const auto current_coordinates = current_location.GetVectorPart();
-            std::get<0>(x_y_z).push_back(current_coordinates.at(0));
-            std::get<1>(x_y_z).push_back(current_coordinates.at(1));
-            std::get<2>(x_y_z).push_back(current_coordinates.at(2));
+            std::get<0>(x_y_z).at(index) = current_coordinates.at(0);
+            std::get<1>(x_y_z).at(index) = current_coordinates.at(1);
+            std::get<2>(x_y_z).at(index) = current_coordinates.at(2);
+            index++;
         }
     }
 
     return x_y_z;
 }
 
-void Plot(const std::vector<Beam>& cube)
+void Plot(const Cube& cube)
 {
     const auto vertices = GenerateVertices(cube);
     const auto& x = std::get<0>(vertices);
@@ -90,11 +92,11 @@ void Plot(const std::vector<Beam>& cube)
 
 const int kTotalPossibleRotations{1073741824};  // = 4^15
 
-void PerformQuarterRotations(std::vector<Beam>& cube, const std::size_t index)
+void PerformQuarterRotations(Cube& cube, const std::size_t index)
 {
     if (index >= (cube.size() - 1UL))
     {
-        Plot(cube);
+        // Plot(cube);
         return;
     }
 
@@ -111,9 +113,9 @@ int main()
     std::cout.imbue(std::locale(""));
     std::cout << "Attempting to calculate up to " << kTotalPossibleRotations << " solutions.\n";
 
-    std::vector<Beam> cube = CreateFlatCube();
+    auto cube = CreateFlatCube();
 
-    matplot::show();
+    // matplot::show();
 
     const auto t0 = std::chrono::steady_clock::now();
     PerformQuarterRotations(cube, 1);
