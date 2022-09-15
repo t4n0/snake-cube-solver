@@ -9,7 +9,6 @@
 #include <thread>
 #include <vector>
 
-const math::Quaternion kOrigin{0.0, 0.0, 0.0};
 const math::Quaternion kNullOrientation{1.0, 0.0, 0.0, 0.0};
 const math::Quaternion kQuarterPitch = math::CreateRotation(math::TAU / 4.0, 0.0, 1.0, 0.0);
 const math::Quaternion kQuarterRoll = math::CreateRotation(math::TAU / 4.0, 1.0, 0.0, 0.0);
@@ -17,13 +16,13 @@ const math::Quaternion kQuarterRoll = math::CreateRotation(math::TAU / 4.0, 1.0,
 struct Beam
 {
     math::Quaternion orientation{kNullOrientation};  // Relative to parent system.
-    math::Quaternion tip{kOrigin};                   // Local coordinates.
+    int blocks{0};
 };
 
 std::ostream& operator<<(std::ostream& ostream, const Beam& beam)
 {
     ostream << "orientation: " << beam.orientation << '\n';
-    ostream << "tip: " << beam.tip;
+    ostream << "blocks: " << beam.blocks;
     return ostream;
 }
 
@@ -37,17 +36,16 @@ void LogCube(const std::vector<Beam> cube)
 
 std::vector<Beam> CreateFlatCube()
 {
-    constexpr std::array<double, 17> kBeamLengths{
-        3.0, 3.0, 3.0, 3.0, 2.0, 2.0, 2.0, 3.0, 3.0, 2.0, 2.0, 3.0, 2.0, 3.0, 2.0, 2.0, 3.0};
+    constexpr std::array<int, 17> kBeamLengths{3, 3, 3, 3, 2, 2, 2, 3, 3, 2, 2, 3, 2, 3, 2, 2, 3};
 
     std::vector<Beam> cube{};
-    cube.emplace_back(Beam{kNullOrientation, math::Quaternion{kBeamLengths.front(), 0.0, 0.0}});
+    cube.emplace_back(Beam{kNullOrientation, kBeamLengths.front()});
 
     auto next_orientation = math::Quaternion{kQuarterPitch};
     for (std::size_t idx{1}; idx < kBeamLengths.size(); idx++)
     {
         next_orientation = next_orientation.Inverse();
-        cube.emplace_back(Beam{next_orientation, math::Quaternion{kBeamLengths.at(idx), 0.0, 0.0}});
+        cube.emplace_back(Beam{next_orientation, kBeamLengths.at(idx)});
     }
 
     return cube;
@@ -65,11 +63,15 @@ std::tuple<std::vector<double>, std::vector<double>, std::vector<double>> Genera
     for (const auto& beam : cube)
     {
         current_orientation = beam.orientation.PrependAsLocalRotationAfter(current_orientation);
-        current_location += beam.tip.RotateBy(current_orientation);
-        const auto current_coordinates = current_location.GetVectorPart();
-        x.push_back(current_coordinates.at(0));
-        y.push_back(current_coordinates.at(1));
-        z.push_back(current_coordinates.at(2));
+        const auto single_block = math::Quaternion{1.0, 0.0, 0.0}.RotateBy(current_orientation);
+        for (int blocks{0}; blocks < beam.blocks; blocks++)
+        {
+            current_location += single_block;
+            const auto current_coordinates = current_location.GetVectorPart();
+            x.push_back(current_coordinates.at(0));
+            y.push_back(current_coordinates.at(1));
+            z.push_back(current_coordinates.at(2));
+        }
     }
 
     return {x, y, z};
