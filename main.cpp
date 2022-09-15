@@ -88,6 +88,8 @@ void Plot(const std::vector<Beam>& cube)
     matplot::zlabel("z");
 }
 
+const int kTotalPossibleRotations{1073741824};  // = 4^15
+
 void PerformQuarterRotations(std::vector<Beam>& cube, const std::size_t index)
 {
     if (index >= (cube.size() - 1UL))
@@ -106,7 +108,7 @@ void PerformQuarterRotations(std::vector<Beam>& cube, const std::size_t index)
 int main()
 {
     std::cout << "Solving cube puzzle with brute force.\n";
-    std::cout << "Attempting to calculate up to 4.294.967.296 solutions.\n";  // = 4^16
+    std::cout << "Attempting to calculate up to " << kTotalPossibleRotations << " solutions.\n";
 
     std::vector<Beam> cube = CreateFlatCube();
 
