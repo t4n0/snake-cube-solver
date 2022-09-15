@@ -121,10 +121,24 @@ void PerformQuarterRotations(Cube& cube, const std::size_t index)
         return;
     }
 
+    if (index == 1UL)
+    {
+        std::cout << "Done here ---> |" << std::endl;
+    }
+
     for (std::size_t quarter_rotations{0}; quarter_rotations < 4; quarter_rotations++)
     {
         PerformQuarterRotations(cube, index + 1);
         cube.at(index).orientation = kQuarterRoll.AppendAsLocalRotationAfter(cube.at(index).orientation);
+        if (index == 2UL)
+        {
+            std::cout << "." << std::flush;
+        }
+    }
+
+    if (index == 1UL)
+    {
+        std::cout << std::endl;
     }
 }
 
