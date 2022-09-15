@@ -98,15 +98,30 @@ const int kTotalPossibleRotations{1073741824};  // = 4^15
 bool VerticesFitIn3by3Box(const Vertices& vertices)
 {
     const auto& x = std::get<0>(vertices);
-    const auto& y = std::get<1>(vertices);
-    const auto& z = std::get<2>(vertices);
     const auto x_minmax = std::minmax_element(x.begin(), x.end());
-    const auto y_minmax = std::minmax_element(y.begin(), y.end());
-    const auto z_minmax = std::minmax_element(z.begin(), z.end());
     const auto x_diff = (*x_minmax.second) - (*x_minmax.first);
-    const auto y_diff = (*x_minmax.second) - (*y_minmax.first);
+    if (x_diff > 3.01)
+    {
+        return false;
+    }
+
+    const auto& y = std::get<1>(vertices);
+    const auto y_minmax = std::minmax_element(y.begin(), y.end());
+    const auto y_diff = (*y_minmax.second) - (*y_minmax.first);
+    if (y_diff > 3.01)
+    {
+        return false;
+    }
+
+    const auto& z = std::get<2>(vertices);
+    const auto z_minmax = std::minmax_element(z.begin(), z.end());
     const auto z_diff = (*z_minmax.second) - (*z_minmax.first);
-    return (x_diff < 3.01) && (y_diff < 3.01) && (z_diff < 3.01);
+    if (z_diff > 3.01)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 void PerformQuarterRotations(Cube& cube, const std::size_t index)
