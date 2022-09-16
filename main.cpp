@@ -34,6 +34,7 @@ void LogCube(const Cube& cube)
     {
         std::cout << beam.orientation << '\n';
     }
+    std::cout << std::endl;
 }
 
 Cube CreateFlatCube()
