@@ -55,6 +55,16 @@ Cube CreateFlatCube()
 
 using Vertices = std::tuple<std::array<double, 27>, std::array<double, 27>, std::array<double, 27>>;
 
+void LogVertices(const Vertices& vertices)
+{
+    const auto& [x, y, z] = vertices;
+    for (std::size_t index{0}; index < x.size(); index++)
+    {
+        std::cout << x.at(index) << " " << y.at(index) << " " << z.at(index) << '\n';
+    }
+    std::cout << std::endl;
+}
+
 Vertices GenerateVertices(const Cube& cube)
 {
     Vertices x_y_z{};
