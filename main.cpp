@@ -103,6 +103,9 @@ void Plot(const Cube& cube)
     matplot::xlabel("x");
     matplot::ylabel("y");
     matplot::zlabel("z");
+    LogCube(cube);
+    LogVertices(vertices);
+    std::cin.ignore();
 }
 
 const int kTotalPossibleRotations{1073741824};  // = 4^15
