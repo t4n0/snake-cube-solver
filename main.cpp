@@ -100,7 +100,7 @@ bool VerticesFitIn3by3Box(const Vertices& vertices)
     const auto& x = std::get<0>(vertices);
     const auto x_minmax = std::minmax_element(x.begin(), x.end());
     const auto x_diff = (*x_minmax.second) - (*x_minmax.first);
-    if (x_diff > 3.01)
+    if (x_diff > 2.01)
     {
         return false;
     }
@@ -108,7 +108,7 @@ bool VerticesFitIn3by3Box(const Vertices& vertices)
     const auto& y = std::get<1>(vertices);
     const auto y_minmax = std::minmax_element(y.begin(), y.end());
     const auto y_diff = (*y_minmax.second) - (*y_minmax.first);
-    if (y_diff > 3.01)
+    if (y_diff > 2.01)
     {
         return false;
     }
@@ -116,7 +116,7 @@ bool VerticesFitIn3by3Box(const Vertices& vertices)
     const auto& z = std::get<2>(vertices);
     const auto z_minmax = std::minmax_element(z.begin(), z.end());
     const auto z_diff = (*z_minmax.second) - (*z_minmax.first);
-    if (z_diff > 3.01)
+    if (z_diff > 2.01)
     {
         return false;
     }
