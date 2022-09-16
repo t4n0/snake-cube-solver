@@ -124,14 +124,44 @@ bool VerticesFitIn3by3Box(const Vertices& vertices)
     return true;
 }
 
+double SquaredDistance(const double x1,
+                       const double y1,
+                       const double z1,
+                       const double x2,
+                       const double y2,
+                       const double z2)
+{
+    return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) + (z1 - z2) * (z1 - z2);
+}
+
+bool VerticesDontCollide(const Vertices& vertices)
+{
+    const auto& x = std::get<0>(vertices);
+    const auto& y = std::get<1>(vertices);
+    const auto& z = std::get<2>(vertices);
+    const auto number_of_vertices = std::get<0>(vertices).size();
+    for (std::size_t j{}; j < number_of_vertices; j++)
+    {
+        for (std::size_t k{}; k < number_of_vertices; k++)
+        {
+            if ((j != k) && (SquaredDistance(x.at(j), y.at(j), z.at(j), x.at(k), y.at(k), z.at(k)) < 0.9))
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
 void PerformQuarterRotations(Cube& cube, const std::size_t index)
 {
     if (index >= (cube.size() - 1UL))
     {
         const auto vertices = GenerateVertices(cube);
-        if (VerticesFitIn3by3Box(vertices))
+        if (VerticesFitIn3by3Box(vertices) && VerticesDontCollide(vertices))
         {
-            // Plot(cube);
+            Plot(cube);
         }
         return;
     }
@@ -165,7 +195,7 @@ int main()
 
     auto cube = CreateFlatCube();
 
-    // matplot::show();
+    matplot::show();
 
     const auto t0 = std::chrono::steady_clock::now();
     PerformQuarterRotations(cube, 1);
