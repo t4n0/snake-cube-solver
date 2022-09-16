@@ -68,11 +68,14 @@ void LogVertices(const Vertices& vertices)
 
 Vertices GenerateVertices(const Cube& cube)
 {
-    Vertices x_y_z{};
+    Vertices x_y_z;
+    std::get<0>(x_y_z).at(0) = 0.0;
+    std::get<1>(x_y_z).at(0) = 0.0;
+    std::get<2>(x_y_z).at(0) = 0.0;
 
     math::Quaternion current_location{0.0, 0.0, 0.0};        // In global coordinates.
     math::Quaternion current_orientation{kNullOrientation};  // In global coordinates.
-    std::size_t index{0};
+    std::size_t index{1};
     for (const auto& beam : cube)
     {
         current_orientation = beam.orientation.AppendAsLocalRotationAfter(current_orientation);
