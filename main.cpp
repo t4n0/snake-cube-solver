@@ -83,9 +83,7 @@ Vertices GenerateVertices(const Cube& cube)
 void Plot(const Cube& cube)
 {
     const auto vertices = GenerateVertices(cube);
-    const auto& x = std::get<0>(vertices);
-    const auto& y = std::get<1>(vertices);
-    const auto& z = std::get<2>(vertices);
+    const auto& [x, y, z] = vertices;
     matplot::plot3(x, y, z);
     matplot::axis(matplot::equal);
     matplot::xlabel("x");
@@ -97,7 +95,7 @@ const int kTotalPossibleRotations{1073741824};  // = 4^15
 
 bool VerticesFitIn3by3Box(const Vertices& vertices)
 {
-    const auto& x = std::get<0>(vertices);
+    const auto& [x, y, z] = vertices;
     const auto x_minmax = std::minmax_element(x.begin(), x.end());
     const auto x_diff = (*x_minmax.second) - (*x_minmax.first);
     if (x_diff > 2.01)
@@ -105,7 +103,6 @@ bool VerticesFitIn3by3Box(const Vertices& vertices)
         return false;
     }
 
-    const auto& y = std::get<1>(vertices);
     const auto y_minmax = std::minmax_element(y.begin(), y.end());
     const auto y_diff = (*y_minmax.second) - (*y_minmax.first);
     if (y_diff > 2.01)
@@ -113,7 +110,6 @@ bool VerticesFitIn3by3Box(const Vertices& vertices)
         return false;
     }
 
-    const auto& z = std::get<2>(vertices);
     const auto z_minmax = std::minmax_element(z.begin(), z.end());
     const auto z_diff = (*z_minmax.second) - (*z_minmax.first);
     if (z_diff > 2.01)
@@ -136,9 +132,7 @@ double SquaredDistance(const double x1,
 
 bool VerticesDontCollide(const Vertices& vertices)
 {
-    const auto& x = std::get<0>(vertices);
-    const auto& y = std::get<1>(vertices);
-    const auto& z = std::get<2>(vertices);
+    const auto& [x, y, z] = vertices;
     const auto number_of_vertices = std::get<0>(vertices).size();
     for (std::size_t j{}; j < number_of_vertices; j++)
     {
