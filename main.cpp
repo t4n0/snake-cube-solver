@@ -98,11 +98,11 @@ void Plot(const Cube& cube)
 {
     const auto vertices = GenerateVertices(cube);
     const auto& [x, y, z] = vertices;
-    matplot::plot3(x, y, z);
-    matplot::axis(matplot::equal);
-    matplot::xlabel("x");
-    matplot::ylabel("y");
-    matplot::zlabel("z");
+
+    static auto figure = matplot::figure<matplot::backend::opengl_embed>();
+    figure->current_axes()->axis(matplot::equal);
+    auto l = figure->current_axes()->plot3(x, y, z, "");
+    l->line_width(2);
     LogCube(cube);
     LogVertices(vertices);
     std::cin.ignore();
@@ -205,8 +205,6 @@ int main()
     std::cout << "Attempting to calculate up to " << kTotalPossibleRotations << " solutions.\n";
 
     auto cube = CreateFlatCube();
-
-    matplot::show();
 
     const auto t0 = std::chrono::steady_clock::now();
     PerformQuarterRotations(cube, 1);
