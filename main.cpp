@@ -209,6 +209,28 @@ bool BlocksDontCollide(const Cube& cube)
     return true;
 }
 
+void PrintProgressTitle(const std::size_t index)
+{
+    if (index == 1UL)
+    {
+        std::cout << "Done here ---> |" << std::endl;
+    }
+}
+void PrintProgress(const std::size_t index)
+{
+    if (index == 2UL)
+    {
+        std::cout << "." << std::flush;
+    }
+}
+void WrapUpProgressBar(const std::size_t index)
+{
+    if (index == 1UL)
+    {
+        std::cout << std::endl;
+    }
+}
+
 void PerformQuarterRotations(Cube& cube, const std::size_t index)
 {
     const bool is_last_block{index >= (cube.size() - 1UL)};
@@ -221,10 +243,7 @@ void PerformQuarterRotations(Cube& cube, const std::size_t index)
         return;
     }
 
-    if (index == 1UL)
-    {
-        std::cout << "Done here ---> |" << std::endl;
-    }
+    PrintProgressTitle(index);
 
     const auto single_block = math::Quaternion{1.0, 0.0, 0.0};
     for (std::size_t quarter_rotations{0}; quarter_rotations < 4; quarter_rotations++)
@@ -237,16 +256,10 @@ void PerformQuarterRotations(Cube& cube, const std::size_t index)
         cube.at(index).global_location =
             cube.at(index - 1UL).global_location + single_block.RotateBy(cube.at(index).global_orientation);
 
-        if (index == 2UL)
-        {
-            std::cout << "." << std::flush;
-        }
+        PrintProgress(index);
     }
 
-    if (index == 1UL)
-    {
-        std::cout << std::endl;
-    }
+    WrapUpProgressBar(index);
 }
 
 int main()
