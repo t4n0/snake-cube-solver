@@ -232,10 +232,15 @@ void WrapUpProgressBar(const std::size_t index)
 
 void PerformQuarterRotations(Cube& cube, const std::size_t index)
 {
-    const bool is_last_block{index >= (cube.size() - 1UL)};
+    cube.at(index).global_orientation =
+        cube.at(index).local_orientation.AppendAsLocalRotationAfter(cube.at(index - 1).global_orientation);
+    cube.at(index).global_location =
+        cube.at(index - 1).global_location + kNextBlock.RotateBy(cube.at(index).global_orientation);
+
+    const bool is_last_block{index >= (cube.size() - 1)};
     if (is_last_block)
     {
-        // if (BlocksFitIn3by3Box(cube) && BlocksDontCollide(cube))
+        if (BlocksFitIn3by3Box(cube) && BlocksDontCollide(cube))
         {
             Plot(cube);
         }
@@ -244,17 +249,23 @@ void PerformQuarterRotations(Cube& cube, const std::size_t index)
 
     PrintProgressTitle(index);
 
-    for (std::size_t quarter_rotations{0}; quarter_rotations < 4; quarter_rotations++)
+    if (cube.at(index).may_roll)
+    {
+        for (std::size_t quarter_rotations{0}; quarter_rotations < 4; quarter_rotations++)
+        {
+            PerformQuarterRotations(cube, index + 1);
+
+            cube.at(index).local_orientation =
+                kQuarterRoll.AppendAsLocalRotationAfter(cube.at(index).local_orientation);
+            cube.at(index).global_orientation =
+                cube.at(index).local_orientation.AppendAsLocalRotationAfter(cube.at(index - 1).global_orientation);
+
+            PrintProgress(index);
+        }
+    }
+    else
     {
         PerformQuarterRotations(cube, index + 1);
-
-        cube.at(index).local_orientation = kQuarterRoll.AppendAsLocalRotationAfter(cube.at(index).local_orientation);
-        cube.at(index).global_orientation =
-            cube.at(index).local_orientation.AppendAsLocalRotationAfter(cube.at(index - 1UL).global_orientation);
-        cube.at(index).global_location =
-            cube.at(index - 1UL).global_location + kNextBlock.RotateBy(cube.at(index).global_orientation);
-
-        PrintProgress(index);
     }
 
     WrapUpProgressBar(index);
