@@ -192,7 +192,7 @@ void PrintProgress(const std::size_t index)
 {
     if (index == 5)
     {
-        std::cout << "." << std::flush;
+        std::cout << "." << std::flush;  // Represent 1/16 of the entire calculation.
     }
 }
 
