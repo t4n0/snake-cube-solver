@@ -116,10 +116,19 @@ void Plot(const Cube& cube)
     const auto [x, y, z] = UnweaveCoordinates(cube);
 
     static auto figure = matplot::figure();
-    auto l = figure->current_axes()->plot3(x, y, z, "");
-    l->line_width(2);
-    figure->current_axes()->axis(matplot::equal);
-    std::cin.ignore();
+    auto ax = matplot::gca();
+    auto l = ax->plot3(x, y, z, "");
+    l->line_width(3);
+    ax->axis(matplot::equal);
+
+    const float start_azimuth = ax->azimuth();
+    int delta_azimuth{0};
+    while (delta_azimuth < 720)
+    {
+        ax->azimuth(start_azimuth + (delta_azimuth % 360));
+        std::this_thread::sleep_for(std::chrono::milliseconds(40));
+        delta_azimuth++;
+    }
 }
 
 const int kTotalPossibleRotations{1073741824};  // = 4^15
@@ -277,6 +286,7 @@ int main()
     std::cout << "Attempting to calculate up to " << kTotalPossibleRotations << " solutions.\n";
 
     auto cube = CreateFlatCube();
+    Plot(cube);
 
     const auto t0 = std::chrono::steady_clock::now();
     PerformQuarterRotations(cube, 1);
