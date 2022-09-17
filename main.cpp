@@ -188,25 +188,11 @@ bool BlocksDontCollide(const Cube& cube)
     return true;
 }
 
-void PrintProgressTitle(const std::size_t index)
-{
-    if (index == 1)
-    {
-        std::cout << "Done here ---> |" << std::endl;
-    }
-}
 void PrintProgress(const std::size_t index)
 {
     if (index == 5)
     {
         std::cout << "." << std::flush;
-    }
-}
-void WrapUpProgressBar(const std::size_t index)
-{
-    if (index == 1)
-    {
-        std::cout << std::endl;
     }
 }
 
@@ -227,8 +213,6 @@ void PerformQuarterRotations(Cube& cube, const std::size_t index)
         return;
     }
 
-    PrintProgressTitle(index);
-
     if (cube.at(index).may_roll)
     {
         for (std::size_t quarter_rotations{0}; quarter_rotations < 4; quarter_rotations++)
@@ -247,8 +231,6 @@ void PerformQuarterRotations(Cube& cube, const std::size_t index)
     {
         PerformQuarterRotations(cube, index + 1);
     }
-
-    WrapUpProgressBar(index);
 }
 
 int main()
@@ -260,9 +242,11 @@ int main()
     auto cube = CreateFlatCube();
     Plot(cube);
 
+    std::cout << "Done here ---> |" << std::endl;
     const auto t0 = std::chrono::steady_clock::now();
     PerformQuarterRotations(cube, 1);
     const auto t1 = std::chrono::steady_clock::now();
+    std::cout << std::endl;
 
     std::cout << "Time spent: " << std::chrono::duration_cast<std::chrono::seconds>(t1 - t0).count() << "secs\n";
 
