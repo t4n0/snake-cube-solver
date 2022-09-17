@@ -21,10 +21,10 @@ MATCHER_P(IsCloseTo, target, "")
         return !is_above_upper && !is_below_lower;
     };
 
-    return IsCloseTo(arg.GetScalarPart(), target.GetScalarPart()) &&              //
-           IsCloseTo(arg.GetVectorPart().at(0), target.GetVectorPart().at(0)) &&  //
-           IsCloseTo(arg.GetVectorPart().at(1), target.GetVectorPart().at(1)) &&  //
-           IsCloseTo(arg.GetVectorPart().at(2), target.GetVectorPart().at(2));
+    return IsCloseTo(arg.GetScalarPart(), target.GetScalarPart()) &&  //
+           IsCloseTo(arg.GetX(), target.GetX()) &&                    //
+           IsCloseTo(arg.GetY(), target.GetY()) &&                    //
+           IsCloseTo(arg.GetZ(), target.GetZ());
 }
 
 TEST(ConstructorsTest, GivenSample_ExpectCorrectInstance)

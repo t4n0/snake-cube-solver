@@ -102,10 +102,9 @@ Vertices UnweaveCoordinates(const Cube& cube)
     Vertices x_y_z{};
     for (std::size_t index{0}; index < cube.size(); index++)
     {
-        const auto current_coordinates = cube.at(index).global_location.GetVectorPart();
-        std::get<0>(x_y_z).at(index) = current_coordinates.at(0);
-        std::get<1>(x_y_z).at(index) = current_coordinates.at(1);
-        std::get<2>(x_y_z).at(index) = current_coordinates.at(2);
+        std::get<0>(x_y_z).at(index) = cube.at(index).global_location.GetX();
+        std::get<1>(x_y_z).at(index) = cube.at(index).global_location.GetY();
+        std::get<2>(x_y_z).at(index) = cube.at(index).global_location.GetZ();
     }
 
     return x_y_z;
@@ -135,42 +134,30 @@ void Plot(const Cube& cube)
 
 const int kTotalPossibleRotations{1073741824};  // = 4^15
 
-double GetX(const Block& block)
-{
-    return std::get<0>(block.global_location.GetVectorPart());
-}
-
-double GetY(const Block& block)
-{
-    return std::get<1>(block.global_location.GetVectorPart());
-}
-
-double GetZ(const Block& block)
-{
-    return std::get<2>(block.global_location.GetVectorPart());
-}
-
 bool BlocksFitIn3by3Box(const Cube& cube)
 {
-    const auto x_minmax =
-        std::minmax_element(cube.begin(), cube.end(), [](const Block& a, const Block& b) { return GetX(a) < GetX(b); });
-    const auto x_diff = GetX(*x_minmax.second) - GetX(*x_minmax.first);
+    const auto x_minmax = std::minmax_element(cube.begin(), cube.end(), [](const Block& a, const Block& b) {
+        return a.global_location.GetX() < b.global_location.GetX();
+    });
+    const auto x_diff = (*x_minmax.second).global_location.GetX() - (*x_minmax.first).global_location.GetX();
     if (x_diff > 2.01)
     {
         return false;
     }
 
-    const auto y_minmax =
-        std::minmax_element(cube.begin(), cube.end(), [](const Block& a, const Block& b) { return GetY(a) < GetY(b); });
-    const auto y_diff = GetY(*y_minmax.second) - GetY(*y_minmax.first);
+    const auto y_minmax = std::minmax_element(cube.begin(), cube.end(), [](const Block& a, const Block& b) {
+        return a.global_location.GetY() < b.global_location.GetY();
+    });
+    const auto y_diff = (*y_minmax.second).global_location.GetY() - (*y_minmax.first).global_location.GetY();
     if (y_diff > 2.01)
     {
         return false;
     }
 
-    const auto z_minmax =
-        std::minmax_element(cube.begin(), cube.end(), [](const Block& a, const Block& b) { return GetZ(a) < GetZ(b); });
-    const auto z_diff = GetZ(*z_minmax.second) - GetZ(*z_minmax.first);
+    const auto z_minmax = std::minmax_element(cube.begin(), cube.end(), [](const Block& a, const Block& b) {
+        return a.global_location.GetZ() < b.global_location.GetZ();
+    });
+    const auto z_diff = (*z_minmax.second).global_location.GetZ() - (*z_minmax.first).global_location.GetZ();
     if (z_diff > 2.01)
     {
         return false;
@@ -179,27 +166,12 @@ bool BlocksFitIn3by3Box(const Cube& cube)
     return true;
 }
 
-double GetX(const math::Quaternion& location)
-{
-    return std::get<0>(location.GetVectorPart());
-}
-
-double GetY(const math::Quaternion& location)
-{
-    return std::get<1>(location.GetVectorPart());
-}
-
-double GetZ(const math::Quaternion& location)
-{
-    return std::get<2>(location.GetVectorPart());
-}
-
 double SquaredDistance(const math::Quaternion q1, const math::Quaternion q2)
 {
     const auto diff = q1 - q2;
-    return GetX(diff) * GetX(diff) +  //
-           GetY(diff) * GetY(diff) +  //
-           GetZ(diff) * GetZ(diff);
+    return diff.GetX() * diff.GetX() +  //
+           diff.GetY() * diff.GetY() +  //
+           diff.GetZ() * diff.GetZ();
 }
 
 bool BlocksDontCollide(const Cube& cube)

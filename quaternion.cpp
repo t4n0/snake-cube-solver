@@ -31,9 +31,17 @@ double Quaternion::GetScalarPart() const
     return w_;
 }
 
-std::array<double, 3> Quaternion::GetVectorPart() const
+double Quaternion::GetX() const
 {
-    return {i_, j_, k_};
+    return i_;
+}
+double Quaternion::GetY() const
+{
+    return j_;
+}
+double Quaternion::GetZ() const
+{
+    return k_;
 }
 
 Quaternion& Quaternion::operator+=(const Quaternion& rhs) noexcept
