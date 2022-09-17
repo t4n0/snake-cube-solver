@@ -144,7 +144,7 @@ bool BlocksFitIn3by3Box(const Cube& cube)
 {
     const auto x_minmax =
         std::minmax_element(cube.begin(), cube.end(), [](const Block& a, const Block& b) { return GetX(a) < GetX(b); });
-    const auto x_diff = GetX(*x_minmax.second) - GetX(*x_minmax.second);
+    const auto x_diff = GetX(*x_minmax.second) - GetX(*x_minmax.first);
     if (x_diff > 2.01)
     {
         return false;
@@ -152,7 +152,7 @@ bool BlocksFitIn3by3Box(const Cube& cube)
 
     const auto y_minmax =
         std::minmax_element(cube.begin(), cube.end(), [](const Block& a, const Block& b) { return GetY(a) < GetY(b); });
-    const auto y_diff = GetY(*y_minmax.second) - GetY(*y_minmax.second);
+    const auto y_diff = GetY(*y_minmax.second) - GetY(*y_minmax.first);
     if (y_diff > 2.01)
     {
         return false;
@@ -160,7 +160,7 @@ bool BlocksFitIn3by3Box(const Cube& cube)
 
     const auto z_minmax =
         std::minmax_element(cube.begin(), cube.end(), [](const Block& a, const Block& b) { return GetZ(a) < GetZ(b); });
-    const auto z_diff = GetZ(*z_minmax.second) - GetZ(*z_minmax.second);
+    const auto z_diff = GetZ(*z_minmax.second) - GetZ(*z_minmax.first);
     if (z_diff > 2.01)
     {
         return false;
