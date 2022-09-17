@@ -87,9 +87,9 @@ Cube CreateFlatCube()
     for (std::size_t index{1}; index < cube.size(); index++)
     {
         cube.at(index).global_orientation =
-            cube.at(index).local_orientation.AppendAsLocalRotationAfter(cube.at(index - 1UL).global_orientation);
+            cube.at(index).local_orientation.AppendAsLocalRotationAfter(cube.at(index - 1).global_orientation);
         cube.at(index).global_location =
-            cube.at(index - 1UL).global_location + kNextBlock.RotateBy(cube.at(index).global_orientation);
+            cube.at(index - 1).global_location + kNextBlock.RotateBy(cube.at(index).global_orientation);
     }
 
     return cube;
@@ -209,7 +209,7 @@ bool BlocksDontCollide(const Cube& cube)
 
 void PrintProgressTitle(const std::size_t index)
 {
-    if (index == 1UL)
+    if (index == 1)
     {
         std::cout << "Done here ---> |" << std::endl;
     }
@@ -223,7 +223,7 @@ void PrintProgress(const std::size_t index)
 }
 void WrapUpProgressBar(const std::size_t index)
 {
-    if (index == 1UL)
+    if (index == 1)
     {
         std::cout << std::endl;
     }
