@@ -54,7 +54,7 @@ Cube CreateFlatCube()
 
     Cube cube{};
 
-    // Fill local orientations. These won't change.
+    // Fill local orientations.
     cube.at(0) = start_block;  // 1 (Rolling would rotate entire cube.)
     cube.at(1) = passive_block;
     cube.at(2) = passive_block;
