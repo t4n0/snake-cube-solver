@@ -117,8 +117,10 @@ void Plot(const Cube& cube)
 
     static auto figure = matplot::figure();
     auto ax = matplot::gca();
-    auto l = ax->plot3(x, y, z, "");
+    auto l = ax->plot3(x, y, z, "-bs");
     l->line_width(3);
+    l->marker_size(12);
+    l->marker_face_color("blue");
     ax->axis(matplot::equal);
 
     const float start_azimuth = ax->azimuth();
