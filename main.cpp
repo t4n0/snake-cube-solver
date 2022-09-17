@@ -13,6 +13,7 @@ const math::Quaternion kOrigin{0.0, 0.0, 0.0};
 const math::Quaternion kNullOrientation{1.0, 0.0, 0.0, 0.0};
 const math::Quaternion kQuarterPitch{math::CreateRotation(math::TAU / 4.0, 0.0, 1.0, 0.0)};
 const math::Quaternion kQuarterRoll{math::CreateRotation(math::TAU / 4.0, 1.0, 0.0, 0.0)};
+const math::Quaternion kNextBlock{1.0, 0.0, 0.0};
 
 struct Block
 {
@@ -83,13 +84,12 @@ Cube CreateFlatCube()
     cube.at(26) = passive_block;
 
     // Calculate global poses.
-    const auto single_block = math::Quaternion{1.0, 0.0, 0.0};
     for (std::size_t index{1}; index < cube.size(); index++)
     {
         cube.at(index).global_orientation =
             cube.at(index).local_orientation.AppendAsLocalRotationAfter(cube.at(index - 1UL).global_orientation);
         cube.at(index).global_location =
-            cube.at(index - 1UL).global_location + single_block.RotateBy(cube.at(index).global_orientation);
+            cube.at(index - 1UL).global_location + kNextBlock.RotateBy(cube.at(index).global_orientation);
     }
 
     return cube;
@@ -245,7 +245,6 @@ void PerformQuarterRotations(Cube& cube, const std::size_t index)
 
     PrintProgressTitle(index);
 
-    const auto single_block = math::Quaternion{1.0, 0.0, 0.0};
     for (std::size_t quarter_rotations{0}; quarter_rotations < 4; quarter_rotations++)
     {
         PerformQuarterRotations(cube, index + 1);
@@ -254,7 +253,7 @@ void PerformQuarterRotations(Cube& cube, const std::size_t index)
         cube.at(index).global_orientation =
             cube.at(index).local_orientation.AppendAsLocalRotationAfter(cube.at(index - 1UL).global_orientation);
         cube.at(index).global_location =
-            cube.at(index - 1UL).global_location + single_block.RotateBy(cube.at(index).global_orientation);
+            cube.at(index - 1UL).global_location + kNextBlock.RotateBy(cube.at(index).global_orientation);
 
         PrintProgress(index);
     }
