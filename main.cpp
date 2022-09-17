@@ -36,9 +36,9 @@ using Cube = std::array<Block, 27>;
 
 void LogCube(const Cube& cube)
 {
-    for (const auto& block : cube)
+    for (std::size_t index{0}; index < cube.size(); index++)
     {
-        std::cout << block << '\n';
+        std::cout << index << '\n' << cube.at(index) << '\n';
     }
     std::cout << std::endl;
 }
@@ -116,10 +116,9 @@ void Plot(const Cube& cube)
     const auto [x, y, z] = UnweaveCoordinates(cube);
 
     static auto figure = matplot::figure();
-    figure->current_axes()->axis(matplot::equal);
     auto l = figure->current_axes()->plot3(x, y, z, "");
     l->line_width(2);
-    LogCube(cube);
+    figure->current_axes()->axis(matplot::equal);
     std::cin.ignore();
 }
 
@@ -217,7 +216,7 @@ void PrintProgressTitle(const std::size_t index)
 }
 void PrintProgress(const std::size_t index)
 {
-    if (index == 2UL)
+    if (index == 5)
     {
         std::cout << "." << std::flush;
     }
@@ -278,7 +277,6 @@ int main()
     std::cout << "Attempting to calculate up to " << kTotalPossibleRotations << " solutions.\n";
 
     auto cube = CreateFlatCube();
-    Plot(cube);
 
     const auto t0 = std::chrono::steady_clock::now();
     PerformQuarterRotations(cube, 1);
