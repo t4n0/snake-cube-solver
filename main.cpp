@@ -113,8 +113,7 @@ Vertices UnweaveCoordinates(const Cube& cube)
 
 void Plot(const Cube& cube)
 {
-    const auto vertices = UnweaveCoordinates(cube);
-    const auto& [x, y, z] = vertices;
+    const auto [x, y, z] = UnweaveCoordinates(cube);
 
     static auto figure = matplot::figure();
     figure->current_axes()->axis(matplot::equal);
