@@ -132,8 +132,6 @@ void Plot(const Cube& cube)
     }
 }
 
-const int kTotalPossibleRotations{1073741824};  // = 4^15
-
 bool BlocksFitIn3by3Box(const Cube& cube)
 {
     const auto x_minmax = std::minmax_element(cube.begin(), cube.end(), [](const Block& a, const Block& b) {
@@ -257,7 +255,7 @@ int main()
 {
     std::cout << "Solving cube puzzle with brute force.\n";
     std::cout.imbue(std::locale(""));
-    std::cout << "Attempting to calculate up to " << kTotalPossibleRotations << " solutions.\n";
+    std::cout << "Attempting to calculate up to 1.073.741.824 solutions.\n";  // = 4^15
 
     auto cube = CreateFlatCube();
     Plot(cube);
