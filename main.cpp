@@ -43,7 +43,7 @@ void LogCube(const Cube& cube)
     std::cout << std::endl;
 }
 
-Cube CreateFlatCube()
+Cube CreateFlatSnake()
 {
     const math::Quaternion invalid{0.0, 0.0, 0.0};
     const auto start_block = Block{kNullOrientation, kNullOrientation, kOrigin, false};
@@ -238,7 +238,7 @@ int main()
     std::cout.imbue(std::locale(""));
     std::cout << "Attempting to calculate up to 1.073.741.824 solutions.\n";  // = 4^15
 
-    auto cube = CreateFlatCube();
+    auto cube = CreateFlatSnake();
     Plot(cube);
 
     std::cout << "Done here ---> |" << std::endl;
