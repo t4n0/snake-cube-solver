@@ -123,7 +123,7 @@ void Plot(const Cube& cube)
 
     const float start_azimuth = ax->azimuth();
     int delta_azimuth{0};
-    while (delta_azimuth < 720)
+    while (delta_azimuth < 360)
     {
         ax->azimuth(start_azimuth + (delta_azimuth % 360));
         std::this_thread::sleep_for(std::chrono::milliseconds(40));
